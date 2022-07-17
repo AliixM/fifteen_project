@@ -1,28 +1,34 @@
-from grpc import Status
 from pydantic import BaseModel
-from enum import IntEnum
+from enum import IntEnum, Enum
+################################################################################################
 
-
-# ----------------------------- pydantic Models -----------------------------
-
+# enum classes
 class State(IntEnum):
-    """_summary_
-
-    Args:
-        Enum (_type_): _description_
+    """ 
+    Enumerate class for the different states of the bike
     """
     CASSE = 1
     NEUF = 2
     BON_ETAT = 3
 
 
+class Operation(str, Enum):
+    """
+    Enum class for the different types of operations (CRUD)
+    """
+    CREATE = "create"
+    UPDATE = "update"
+    DELETE = "delete"
+
+
+# pydantic models
 class Bike(BaseModel):
-    """ Bike class that describes bike
+    """ Class that describes bike
 
     Args:
-        serial_number : bike identifier (integer)
-        status : 
-        maintenance_state : 
+        serial_number (string): bike identifier 
+        status (boolean): bike is rented or not by a client
+        maintenance_state (integer): see if the bike is in good condition or not
     """
     serial_number : str
     status : bool
@@ -38,10 +44,12 @@ class Bike(BaseModel):
 
 
 class Station(BaseModel):
-    """_summary_
+    """ Class that describes station
 
     Args:
-        BaseModel (_type_): _description_
+        serial_number (string) : station identifier
+        maintenance_state (integer): station is in good condition or not
+        associated_bikes (list of bikes) : list of bikes associated to the station
     """
     serial_number : str
     maintenance_state : State
@@ -54,6 +62,8 @@ class Station(BaseModel):
             'value_error.any_str.max_length': 'max_length:{limit_value}',
         }
 
+################################################################################################
+
 if __name__ == '__main__':
 
     # ----------------------------- examples -----------------------------
@@ -64,4 +74,4 @@ if __name__ == '__main__':
 
     stat = Station(serial_number="456", maintenance_state=State.CASSE, associated_bikes=[velo, velo2, velo3])
 
-    print(velo.dict())
+    # print(velo.dict())
